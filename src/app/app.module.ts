@@ -17,7 +17,7 @@ import { ChartsModule } from 'ng2-charts';
 import { GraphComponent } from './graph/graph.component';
 import { FeaturesComponent } from './features/features.component';
 import { FetchdataComponent } from './fetchdata/fetchdata.component';
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 //import {AppRoutingModule} from './app-routing.module';
 //import { Model } from './model';
@@ -81,10 +81,11 @@ const appRoutes:Routes=[
     RouterModule.forRoot(appRoutes),
     //RouterModule.forRoot(dashRoutes),
     BrowserModule,
+    NgMultiSelectDropDownModule.forRoot(),
     FormsModule,
     HttpModule,
     ChartsModule,
-    MultiselectDropdownModule
+    
     
     //AppRoutingModule
   ],
