@@ -12,12 +12,14 @@ export class GraphComponent implements OnInit {
     ref=[];
     mapdevId:object={};
     status:boolean=false;
-    chartData1:number[][]=new Array();
+    chartData1:number[][];
+    chartData=[];
     chartData3=[];
     chartLabels=[];
     arrcity=[];
     city=[];
     obj:object={};
+    month;object={};
     date=[];
     iscity:boolean=false;
     dataall1=[];
@@ -39,8 +41,8 @@ export class GraphComponent implements OnInit {
     dropdownAreaList = [];
     selectedAreaItems = [];
     dropdownAreaSettings = {};
-
-
+    myarray:number[][]=new Array;
+    
     constructor(private http: Http) { 
       
     }
@@ -50,6 +52,9 @@ export class GraphComponent implements OnInit {
 
    mapping=function()
    {
+     this.ref=[];
+     this.map=[];
+     this.selectedAreaItems=[];
       this.http.get("http://localhost:3000/display/mapping").subscribe(res=>{
         var temp1=res.json();
         for(let i=0,c=0,m=0;i<4;i++)
@@ -87,96 +92,148 @@ export class GraphComponent implements OnInit {
 
   graph=function(e)
   {
-    console.log(e);
-    var d1=new Date(e.d1);
-    var d2=new Date(e.d2);
-
-    this.date1=d1.getDate();
-    this.date2=d2.getDate();
-    console.log(this.selectedAreaItems);
-    console.log(this.value);
     this.chartData2=[];
     this.chartLabels=[];
     this.date=[];
     this.chartData1=[];
     this.chartData3=[];
-    
-    this.status=true;
-    this.http.get("http://localhost:3000/display/graph").subscribe(res=>{
-       console.log(res);
-      var temp=res.json();
-      var s=0;
-      
+    this.chartData=[];
 
-      for (let i=0,j=0,k=0; k<16;k++)
-      {
-        var iddb=temp.rows[k].doc.deviceId;
-       var mydate=temp.rows[k].doc.timestamp;
-       var date11=new Date(mydate);
-        var time=date11.getUTCDate();
+    console.log(e);
+    var d1=new Date(e.d1);
+    var d2=new Date(e.d2);
+    this.date1=d1.getDate();
+    this.date2=d2.getDate();
+   
+    var m=d1.getMonth();
+    console.log(m);
+    
+    for(let d=0,d1=this.date1;d1<=this.date2;d1++){
+      this.date[d]=d1;
+      d++;
+    }
+
+    for(let a=0;a<this.selectedAreaItems.length;a++){
+            this.myarray[a]=new Array(32);
+          }
+
+    console.log(this.selectedAreaItems);
+    console.log(this.date);
+     for(let a=0;a<this.selectedAreaItems.length;a++){
         
-        //console.log(time);
-        //console.log(this.date1+" "+this.date2);
-       if(this.date1<=time && this.date2>=time){
-        
-        if(this.selectedAreaItems[s]==iddb)
-        {
-          this.chartData1[i]=temp.rows[k].doc.data.d.usage;
-          this.date[i]=time;
-          i++;
-        } 
-        else if(this.selectedAreaItems[s+1]==iddb){
-          this.chartData3[j]=temp.rows[k].doc.data.d.usage;
-          this.date[j]=time;
-          j++;
+      this.month={
+        "m":m+1,
+        "array":this.selectedAreaItems[a]
+      }
+        this.http.post("http://localhost:3000/display/graph",this.month).subscribe(res=>{
+        //console.log(res['_body']);
+        var temp=res.json();
+        var m=0;
+        console.log(temp);
+        // for(let d=0;d<this.date.length;d++){
+        //   var date=new Date(temp[d].data.d.timestamp);
+        //   var dbdate=date.getDate();
+        //   console.log(date);
+        //   console.log(dbdate);
+        //   if(this.date[d]==dbdate){
+        for(let i=0;i<temp.length;i++){
+          for(let d=0;d<this.date.length;d++){
+            var date=new Date(temp[i].timestamp);
+            var dbdate=date.getDate();
+            console.log(dbdate);
+            console.log(this.date[d]);
+            if(this.date[d]==dbdate){
+              this.myarray[a][m]=temp[i].data.d.usage;
+              m++;
         }
       }
     }
-  
-    for(let i=0;i<=this.date.length;i++)
-    {
-		  for(let j=i+1;j<this.date.length;j++)
-		{
-			if(this.date[i]>this.date[j])
-			{
-				temp  =this.date[i];
-				this.date[i]=this.date[j];
-        this.date[j]=temp;
+        // console.log(this.chartData);
+        // this.myarray[a]=this.chartData;
+        // console.log(this.myarray[a]);
+        // m++;
+     })
+     
+      }
+    console.log(this.myarray);
+    //this.status=true;
+    // this.http.post("http://localhost:3000/display/graph",this.month).subscribe(res=>{
+    //    console.log(res);
+    //   var temp=res.json();
+    //   var s=0;
+    //   console.log(temp);
+
+    //   for (let i=0,j=0,k=0; k<16;k++)
+    //   {
+    //     var iddb=temp.rows[k].doc.deviceId;
+    //     var mydate=temp.rows[k].doc.timestamp;
+    //     var date11=new Date(mydate);
+    //     var time=date11.getUTCDate();
+    //     var usage=temp.rows[k].doc.data.d.usage;
         
-        if(this.chartData1.length){
-        var temp1=this.chartData1[i];
-        this.chartData1[i]=this.chartData1[i+1];
-        this.chartData1[i+1]=temp1;
-      }
+    //     for(let a=0;a<this.selectedAreaItems.length;a++){
+    //       this.myarray[a]=new Array(32);
+    //     }
 
-      if(this.chartData3.length){
-        var temp2=this.chartData3[i];
-        this.chartData3[i]=this.chartData3[i+1];
-        this.chartData3[i+1]=temp2;
-      }
+    //     // this.myarray[0][0]="h";
+    //     // this.myarray[0][1]="d";
+    //     // this.myarray[1][1]="sh";
+        
+    //     // this.myarray[1][0]="hs";
+        
+    //     //console.log(this.date1+" "+this.date2);
+    //     for(let t=0;t<4;t++)
+    //     {
+    //       if(this.date[t]==time)
+    //       {
+            
+    //         for(let s=0;s<this.selectedAreaItems.length;s++)
+    //         {
+    //           for(let y=0;y<4;y++)
+    //           {
+    //             if(this.selectedAreaItems[s]==iddb)
+    //             {
+    //               console.log("abcvc");
+    //               console.log(usage);
+    //               this.myarray[t][y]=usage;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
 
-			}
-		}
-	}
-    s++;
-      console.log("data1"+this.date);
-      console.log("data3"+this.chartData3);
-       
-      if(this.chartData1.length && this.chartData3.length){
-        this.chartData2 = [
-          { data:  this.chartData1 , label: this.selectedAreaItems[0] },
-          { data:  this.chartData3 , label: this.selectedAreaItems[1] }
-      ];
-    }
-    else{
-      this.chartData2 = [
-        { data:  this.chartData1 , label: this.selectedAreaItems[0] }
-      ];
-    }
+            //   this.chartData1[t]=usage;
+            // }
+            // else if(this.selectedAreaItems[s+1]==iddb){
+            //   this.chartData3[t]=usage;
+            // }
+            
+            // for (let m=0;m<3; m++){
+            //   this.myarray[m]=new Array(3)
+            //   if(m==1){
+            //     console.log("0");
+            //     this.myarray[m]="hello";
+            //   }
+            // }
+          // }
+          
+        //}
+    //    console.log(this.myarray);
+    //   if(this.chartData1.length && this.chartData3.length){
+    //     this.chartData2 = [
+    //       { data:  this.chartData1 , label: this.selectedAreaItems[0] },
+    //       { data:  this.chartData3 , label: this.selectedAreaItems[1] }
+    //   ];
+    // }
+    // else{
+    //   this.chartData2 = [
+    //     { data:  this.chartData1 , label: this.selectedAreaItems[0] }
+    //   ];
+    // }
     
-      //console.log("chartData"+JSON.stringify(this.chartData2, undefined ,2));
+    //   //console.log("chartData"+JSON.stringify(this.chartData2, undefined ,2));
 
-    })
+    // })
       // console.log("chartData"+JSON.stringify(this.chartData2, undefined ,2));
   }
 
@@ -210,7 +267,12 @@ export class GraphComponent implements OnInit {
   };
 }
 
+// create_array=function(name,size)
+// {
+  
+//   // perform operations on array_name
 
+// }
 
 
 onCitySelect(item:any){

@@ -107,7 +107,7 @@ app.post("/add", function (request, response) {
         var deviceId=data.deviceId;
         mydbiot.insert(data,deviceId, function(err) {
           if (err) {
-            return console.log('[mydbiot.insert] ', err.message);
+            return console.log('[mydbiot.insert]', err.message);
           }
         });
     response.send("Device Added successfully. Auth Token is : "+data.authToken);
@@ -135,8 +135,11 @@ app.delete("/del", function (request, response) {
     
   });
 
-  app.get("/graph", function (request, response) {
-    server1.getData(function(data){
+  app.post("/graph", function (request, response) {
+    var m1=request.body.m;
+    var id=request.body.array;
+    server1.getData(m1,id,function(data){
+      console.log(data);
       response.send(data);
     });
   });
