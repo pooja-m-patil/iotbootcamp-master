@@ -21,7 +21,7 @@
         [settings]="dropdownSettings"
         (onSelect)="onAreaSelect($event)"
         (onSelectAll)="onAreaSelectAll($event)"
-        (onDeSelect)="onAreaSelect($event)"
+        (onDeSelect)="onAreaDeSelect($event)"
     >
     </ng-multiselect-dropdown>
     
@@ -43,9 +43,8 @@
 </div>
 
      
-<table style="width: 100%;" border=1 *ngIf="status && chartData2.length">
-  <tr>
-    <td>
+
+      <div *ngIf="status==selectedAreaItems.length && chartData2.length">
         <h3>Line Chart</h3>
         <div style="width: 50%;">
             <canvas 
@@ -59,9 +58,7 @@
           </canvas>
           </div> 
 
-    </td>
-
-    <td>
+   
         <h3>Bar Chart</h3>
         <div>
             <div style="display: block" style="width: 50%;">
@@ -75,12 +72,7 @@
           </div>
           
 
-    </td>
-  </tr>
-
-  <tr>
-
-    <td>
+    
         <h3>Pie Chart</h3>
         <div>
 
@@ -95,7 +87,8 @@
             </div>
             </div>
 
-    </td>
+   
+  </div>
     <!-- <td>
    
       <div style="display: block" style="width: 50%;">
@@ -119,8 +112,7 @@
                       ></canvas>
         </div>
         </td> -->
-  </tr>
-</table>
+ 
 
 
   

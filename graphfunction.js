@@ -14,7 +14,7 @@ exports.getData=function(m1,id,callback)
   var request = require("request");
 
 var options = { method: 'POST',
-  url: 'https://722fa7b8-0c41-4d59-ac8c-1c02d25eaef5-bluemix.cloudant.com/iotp_tgacg8_watercontrol_2018-04/_find',
+  url: 'https://722fa7b8-0c41-4d59-ac8c-1c02d25eaef5-bluemix.cloudant.com/iotp_tgacg8_watercontrol_2018-0'+m1+'/_find',
   headers: 
    { 'postman-token': '21c7b716-c077-06fa-c9a9-220fd67e63d5',
      'cache-control': 'no-cache',
